@@ -1,0 +1,28 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<body class="bg-slate-50 p-10">
+    <div class="max-w-2xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden border border-indigo-100">
+        <div class="bg-indigo-600 p-8 text-white flex items-center">
+            <i class="fas fa-user-graduate text-5xl mr-6 opacity-50"></i>
+            <div>
+                <h1 class="text-2xl font-bold italic">{{ sinh_vien.name }}</h1>
+                <p class="text-indigo-100">Mã sinh viên: #{{ sinh_vien.id }}</p>
+            </div>
+        </div>
+        <div class="p-8 space-y-4">
+            <div class="flex justify-between border-b pb-2">
+                <span class="text-gray-500">Lớp học:</span>
+                <span class="font-bold text-indigo-700">{{ sinh_vien.lop }}</span>
+            </div>
+            <div class="flex justify-between border-b pb-2">
+                <span class="text-gray-500">Tuổi:</span>
+                <span class="font-bold">{{ sinh_vien.age }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-500">Trạng thái:</span>
+                <span class="text-green-600 font-bold">Đang theo học</span>
+            </div>
+        </div>
+    </div>
+</body>

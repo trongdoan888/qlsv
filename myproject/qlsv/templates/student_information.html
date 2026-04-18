@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hệ thống Quản lý Giáo dục</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .active-tab { bg-color: #4f46e5; border-radius: 0.75rem; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans flex min-h-screen">
+
+    <aside class="w-64 bg-indigo-900 text-white flex flex-col shadow-xl">
+        <div class="p-6 text-xl font-bold border-b border-indigo-800 text-center">
+            ADMIN PANEL
+        </div>
+        <nav class="flex-1 mt-6 px-4 space-y-2">
+            <button onclick="switchTab('sinh-vien')" id="btn-sv" class="w-full flex items-center p-3 bg-indigo-700 rounded-xl transition">
+                <i class="fas fa-user-graduate mr-3"></i> Quản lý sinh viên
+            </button>
+            <button onclick="switchTab('giang-vien')" id="btn-gv" class="w-full flex items-center p-3 hover:bg-indigo-800 rounded-xl transition">
+                <i class="fas fa-chalkboard-teacher mr-3"></i> Quản lý giảng viên
+            </button>
+        </nav>
+    </aside>
+
+    <div class="flex-1 flex flex-col">
+        
+        <header class="bg-white shadow-sm border-b border-gray-200 px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center bg-gray-100 rounded-lg px-4 py-2 w-1/3">
+                <i class="fas fa-search text-gray-400"></i>
+                <input type="text" id="searchInput" placeholder="Tìm kiếm nhanh..." 
+                       class="bg-transparent border-none focus:ring-0 text-sm ml-2 w-full outline-none">
+            </div>
+            <div class="font-medium text-gray-700">Xin chào, Admin</div>
+        </header>
+
+        <main class="p-8">
+            
+            <section id="section-sinh-vien" class="tab-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">Danh sách Sinh viên</h1>
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-bold flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Thêm Sinh viên
+                    </button>
+                </div>
+                <div class="bg-white rounded-xl shadow overflow-hidden border border-gray-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Mã SV</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Họ Tên</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Lớp</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-right">Thao tác</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Xem thông tin</th>
+                            </tr>
+                        </thead>
+                        <div>
+                            {% for sv in sinh_vien %}
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 font-mono text-indigo-600">{{ sv.id }}</td>
+                                    <td class="px-6 py-4 font-medium">{{ sv.name }}</td>
+                                    <td class="px-6 py-4">{{ sv.lop }}</td>
+                                    <td class="px-6 py-4 text-right space-x-2">
+                                        <button class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
+                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
+                                    </td>
+                                    <td class="px-6 py-4"><a href={% url 'st' %} class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+                        </div>
+                    </table>
+                </div>
+            </section>
+
+            <section id="section-giang-vien" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">Danh sách Giảng viên</h1>
+                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg font-bold flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Thêm Giảng viên
+                    </button>
+                </div> 
+                <div class="bg-white rounded-xl shadow overflow-hidden border border-gray-200">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Mã GV</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Họ Tên</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Khoa</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-right">Thao tác</th>
+                                <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Xem thông tin</th>
+                            </tr>
+                        </thead>
+                        <div>
+                            {% for gv in giang_vien %}
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="px-6 py-4 font-mono text-emerald-600">{{ gv.id }}</td>
+                                    <td class="px-6 py-4 font-medium">{{ gv.name }}</td>
+                                    <td class="px-6 py-4">{{ gv.major }}</td>
+                                    <td class="px-6 py-4 text-right space-x-2">
+                                        <button class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
+                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
+                                    </td>
+                                    <td class="px-6 py-4"><a href={% url 'teacher_detail' %} class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
+                                </tr>
+                            </tbody>
+                            {% endfor %}
+                        </div>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function switchTab(tab) {
+            // Ẩn tất cả các section
+            document.querySelectorAll('.tab-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            // Bỏ màu active của tất cả nút
+            document.getElementById('btn-sv').classList.remove('bg-indigo-700');
+            document.getElementById('btn-gv').classList.remove('bg-indigo-700');
+
+            // Hiện section tương ứng và active nút
+            if(tab === 'sinh-vien') {
+                document.getElementById('section-sinh-vien').classList.remove('hidden');
+                document.getElementById('btn-sv').classList.add('bg-indigo-700');
+            } else {
+                document.getElementById('section-giang-vien').classList.remove('hidden');
+                document.getElementById('btn-gv').classList.add('bg-indigo-700');
+            }
+        }
+    </script>
+</body>
+</html>
