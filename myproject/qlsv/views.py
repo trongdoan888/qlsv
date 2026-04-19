@@ -1,53 +1,11 @@
 from urllib import request
-
-from django.shortcuts import render
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
-# Create your views here.
-def student_information(request):
-    thong_tin_sinh_vien = [
-        {
-        'id': 'PH12345',
-        'name': 'Nguyen Van A',
-        'age': 20,
-        'lop': 'CTK42'
-        },
-         {
-        'id': 'PH235525',
-        'name': 'Nguyen Van B',
-        'age': 24,
-        'lop': 'CTK42'
-        },
-         {
-        'id': 'PH7463',
-        'name': 'Nguyen Van C',
-        'age': 67,
-        'lop': 'CTK42'
-        },
-    ]
-
-    thong_tin_giang_vien = [
-        {'id': 'GV12345',
-        'name': 'Nguyen Anh Quân',
-        'major': 'Công nghệ thông tin',
-        },
-        {'id': 'GV235525',
-        'name': 'Nguyen Van B', 
-        'major': 'Công nghệ thông tin',
-        },
-        {'id': 'GV7463',
-        'name': 'Nguyen Van C',
-        'major': 'Công nghệ thông tin',
-        }, 
-    ]
-
-    context = {
-        'sinh_vien': thong_tin_sinh_vien,
-        'giang_vien': thong_tin_giang_vien
-    }
-    return render(request, 'student_information.html', context) 
-
+from django.http import HttpResponse
+from .models import  giangvien, sinhvien
+from .serializers import SinhVienSerializer, GiangVienSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+# Trang Login
 def home(request):
     if request.method == 'POST':
 
@@ -56,20 +14,79 @@ def home(request):
 
         if username == 'admin' and password == '123':
 
-            return redirect('student_information')
+            return redirect('information')
         
         else:
             return render(request, 'home.html', {'error': 'Tài khoản hoặc mật khẩu không hợp lệ!'})
     return render(request, 'home.html')
 
-def student_detail(request, student_id):
-
+# Sinh Vien
+def student_detail(request, id):
     
-    return HttpResponse(f'Student Detail Page - Student ID: {student_id}')
+    student = sinhvien.objects.get(id=id)
 
-def teacher_detail(request, teacher_id):
-    
-    return HttpResponse(f'Teacher Detail Page - Teacher ID: {teacher_id}')
+    return render(request, 'student_detail.html', {'student': student})
+
+@api_view(['GET'])
+def get_students(request):
+    students = sinhvien.objects.all()
+
+    serializer = SinhVienSerializer(students, many=True)
+
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def create_student(request):
+    sinhvien = sinhvien.objects.create(
+        name = request.data.get('name'),
+        age = request.data.get('age'),
+        email = request.data.get('email'),
+        id = request.data.get('id'),
+        lop = request.data.get('lop')
+    )
+    serializers = SinhVienSerializer(sinhvien)
+    return Response(serializers.data)
+
+# Giang Vien
+def teacher_detail(request, id):
+
+    teacher = giangvien.objects.get(id=id)
+
+    return render(request, 'teacher_detail.html', {'teacher': teacher})
+
+@api_view(['GET'])
+def get_teachers(request):
+    teacher = giangvien.objects.all()
+
+    serrializer = GiangVienSerializer(teacher, many=True)
+
+    return Response(serrializer.data)
+
+@api_view(['POST'])
+def create_teacher(request):
+    giangvien = giangvien.objects.create(
+        name = request.data.get('name'),
+        age = request.data.get('age'),
+        email = request.data.get('email'),
+        id = request.data.get('id'),
+        khoa = request.data.get('khoa')
+    )
+    serializers = GiangVienSerializer(giangvien)
+    return Response(serializers.data)
+
+
+# Chung 
+def information(request):
+    students = sinhvien.objects.all()
+    teachers = giangvien.objects.all()
+
+    context = {
+        'sinh_vien': students,
+        'giang_vien': teachers
+    }
+    return render(request, 'information.html', context)
+
+
 
 
 

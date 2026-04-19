@@ -58,8 +58,8 @@
                             </tr>
                         </thead>
                         <div>
-                            {% for sv in sinh_vien %}
                             <tbody class="divide-y divide-gray-100">
+                                {% for sv in sinh_vien %}
                                 <tr class="hover:bg-gray-50 transition">
                                     <td class="px-6 py-4 font-mono text-indigo-600">{{ sv.id }}</td>
                                     <td class="px-6 py-4 font-medium">{{ sv.name }}</td>
@@ -68,10 +68,10 @@
                                         <button class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
                                         <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
                                     </td>
-                                    <td class="px-6 py-4"><a href={% url 'st' %} class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
+                                    <td class="px-6 py-4"><a href="{% url 'student_detail' sv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
                                 </tr>
+                                {% endfor %}
                             </tbody>
-                            {% endfor %}
                         </div>
                     </table>
                 </div>
@@ -106,7 +106,7 @@
                                         <button class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
                                         <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
                                     </td>
-                                    <td class="px-6 py-4"><a href={% url 'teacher_detail' %} class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
+                                    <td class="px-6 py-4"><a href={% url 'teacher_detail' gv.id %} class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
                                 </tr>
                             </tbody>
                             {% endfor %}
