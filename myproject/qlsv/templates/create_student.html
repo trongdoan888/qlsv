@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thêm sinh viên mới</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
+        <div class="bg-indigo-600 p-8 text-white text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+                <i class="fas fa-user-plus text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold uppercase tracking-wide">Thêm Sinh Viên Mới</h1>
+            <p class="text-indigo-100 text-sm mt-1">Vui lòng nhập đầy đủ thông tin bên dưới</p>
+        </div>
+
+        <form action="{% url 'add_student' %}" method="POST" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {% csrf_token %}
+
+            <div class="md:col-span-1">
+                <input type='text' id='id' placeholder="Mã sinh viên (ID)" class="block text-sm font-semibold text-gray-700 mb-2">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-id-card"></i>
+                    </span>
+                    <input type="text" name="id" required
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                           placeholder="Ví dụ: SV001">
+                </div>
+            </div>
+
+            <div class="md:col-span-1">
+                <input type='text' id='name' placeholder="Họ và Tên" class="block text-sm font-semibold text-gray-700 mb-2">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input type="text" name="name" required
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                           placeholder="Nguyễn Văn A">
+                </div>
+            </div>
+
+            <div class="md:col-span-1">
+                <input type='number' id='age' placeholder="Tuổi" class="block text-sm font-semibold text-gray-700 mb-2">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-calendar-day"></i>
+                    </span>
+                    <input type="number" name="age" required min="17" max="50"
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                           placeholder="18">
+                </div>
+            </div>
+
+            <div class="md:col-span-1">
+                <input type='text' id='lop' placeholder="Lớp học" class="block text-sm font-semibold text-gray-700 mb-2">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-university"></i>
+                    </span>
+                    <input type="text" name="lop" required
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                           placeholder="Ví dụ: CNTT K15">
+                </div>
+            </div>
+
+            <div class="md:col-span-2">
+                <input type='email' id='email' placeholder="Địa chỉ Email" class="block text-sm font-semibold text-gray-700 mb-2">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input type="email" name="email" required
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                           placeholder="tensinhvien@email.com">
+                </div>
+            </div>
+
+            <div class="md:col-span-2 flex items-center justify-end space-x-4 mt-4">
+                <a href="{% url 'student_information' %}" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-all">
+                    Hủy bỏ
+                </a>
+                <button type="submit" 
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-2.5 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all transform active:scale-95">
+                    Lưu thông tin
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+    function sendData() {
+
+        const data = {
+            id : document.getElementsByName('id').value,
+            name : document.getElementsByName('name').value,
+            age : document.getElementsByName('age').value,
+            email : document.getElementsByName('email').value,
+            lop : document.getElementsByName('lop').value  
+        }
+
+        fetch('/api/create-student/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(respone => {
+            if (respone.ok) {
+                alert("Thêm sinh viên thành công!")
+                window.location.href = "/student-information"
+            }
+            else {
+                alert("Có lỗi xảy ra khi thêm sinh viên!")
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Có lỗi xảy ra khi thêm sinh viên!")
+        });
+    }
+    
+    function getCookie(name){
+        let cookieVlue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            
+            for (let i = 0; i < cookies.lenght; i++){
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.leght + 1)) === (name + '='){
+                    cookieVlue = decodeURIComponent(cookie.substring(name.lenght+ 1));
+                    break;
+                }
+            }
+        }
+        return cookieVlue;
+    }
+    </script>
+</body>
+</html>

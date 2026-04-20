@@ -37,14 +37,14 @@ def get_students(request):
 
 @api_view(['POST'])
 def create_student(request):
-    sinhvien = sinhvien.objects.create(
+    new_student = sinhvien.objects.create(
         name = request.data.get('name'),
         age = request.data.get('age'),
         email = request.data.get('email'),
         id = request.data.get('id'),
         lop = request.data.get('lop')
     )
-    serializers = SinhVienSerializer(sinhvien)
+    serializers = SinhVienSerializer(new_student)
     return Response(serializers.data)
 
 # Giang Vien
@@ -64,15 +64,11 @@ def get_teachers(request):
 
 @api_view(['POST'])
 def create_teacher(request):
-    giangvien = giangvien.objects.create(
-        name = request.data.get('name'),
-        age = request.data.get('age'),
-        email = request.data.get('email'),
-        id = request.data.get('id'),
-        khoa = request.data.get('khoa')
-    )
-    serializers = GiangVienSerializer(giangvien)
-    return Response(serializers.data)
+    serializer = SinhVienSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
 
 
 # Chung 
