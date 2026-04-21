@@ -18,11 +18,11 @@
             <p class="text-indigo-100 text-sm mt-1">Vui lòng nhập đầy đủ thông tin bên dưới</p>
         </div>
 
-        <form action="{% url 'add_student' %}" method="POST" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onsubmit="event.preventDefault(); sendData();" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             {% csrf_token %}
 
             <div class="md:col-span-1">
-                <input type='text' id='id' placeholder="Mã sinh viên (ID)" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="id" class="block text-sm font-semibold text-gray-700 mb-2">Mã sinh viên (ID)</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-id-card"></i>
@@ -34,7 +34,7 @@
             </div>
 
             <div class="md:col-span-1">
-                <input type='text' id='name' placeholder="Họ và Tên" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Họ và Tên</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-user"></i>
@@ -46,7 +46,7 @@
             </div>
 
             <div class="md:col-span-1">
-                <input type='number' id='age' placeholder="Tuổi" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="age" class="block text-sm font-semibold text-gray-700 mb-2">Tuổi</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-calendar-day"></i>
@@ -58,7 +58,7 @@
             </div>
 
             <div class="md:col-span-1">
-                <input type='text' id='lop' placeholder="Lớp học" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="lop" class="block text-sm font-semibold text-gray-700 mb-2">Lớp học</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-university"></i>
@@ -70,7 +70,7 @@
             </div>
 
             <div class="md:col-span-2">
-                <input type='email' id='email' placeholder="Địa chỉ Email" class="block text-sm font-semibold text-gray-700 mb-2">
+                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Địa chỉ Email</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-envelope"></i>
@@ -82,7 +82,7 @@
             </div>
 
             <div class="md:col-span-2 flex items-center justify-end space-x-4 mt-4">
-                <a href="{% url 'student_information' %}" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-all">
+                <a href="{% url 'information' %}" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-all">
                     Hủy bỏ
                 </a>
                 <button type="submit" 
@@ -97,12 +97,14 @@
     function sendData() {
 
         const data = {
-            id : document.getElementsByName('id').value,
-            name : document.getElementsByName('name').value,
-            age : document.getElementsByName('age').value,
-            email : document.getElementsByName('email').value,
-            lop : document.getElementsByName('lop').value  
+            id : document.querySelector('input[name="id"]').value,
+            name : document.querySelector('input[name="name"]').value,
+            age : document.querySelector('input[name="age"]').value,
+            email : document.querySelector('input[name="email"]').value,
+            lop : document.querySelector('input[name="lop"]').value  
         }
+
+        console.log("Data to send:", data);
 
         fetch('/api/create-student/', {
             method: 'POST',
@@ -112,36 +114,21 @@
             },
             body: JSON.stringify(data)
         })
-        .then(respone => {
-            if (respone.ok) {
-                alert("Thêm sinh viên thành công!")
-                window.location.href = "/student-information"
-            }
-            else {
-                alert("Có lỗi xảy ra khi thêm sinh viên!")
+        .then(response => response.json())
+        .then(result => {
+            if (result.ok) {
+                alert(result.message);
+                window.location.href = "{% url 'information' %}";
+            } else  {
+                alert("Thất bại: " + (result.error || "Đã xảy ra lỗi không xác định"));
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert("Có lỗi xảy ra khi thêm sinh viên!")
+            alert("Khong thể kết nối đến server. Vui lòng thử lại sau!");
         });
     }
     
-    function getCookie(name){
-        let cookieVlue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            
-            for (let i = 0; i < cookies.lenght; i++){
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.leght + 1)) === (name + '='){
-                    cookieVlue = decodeURIComponent(cookie.substring(name.lenght+ 1));
-                    break;
-                }
-            }
-        }
-        return cookieVlue;
-    }
     </script>
 </body>
 </html>

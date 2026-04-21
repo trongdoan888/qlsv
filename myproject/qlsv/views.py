@@ -5,6 +5,7 @@ from .models import  giangvien, sinhvien
 from .serializers import SinhVienSerializer, GiangVienSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db import IntegrityError 
 # Trang Login
 def home(request):
     if request.method == 'POST':
@@ -36,16 +37,33 @@ def get_students(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
-def create_student(request):
-    new_student = sinhvien.objects.create(
-        name = request.data.get('name'),
-        age = request.data.get('age'),
-        email = request.data.get('email'),
-        id = request.data.get('id'),
-        lop = request.data.get('lop')
-    )
-    serializers = SinhVienSerializer(new_student)
-    return Response(serializers.data)
+def create_student_api(request):
+    try:
+        new_student = sinhvien.objects.create(
+            name = request.data.get('name'),
+            age = request.data.get('age'),
+            email = request.data.get('email'),
+            id = request.data.get('id'),
+            lop = request.data.get('lop')
+        )
+
+        serializers = SinhVienSerializer(new_student)
+        return Response({
+            'message': 'Sinh viên được tạo thành công!',
+            'student': serializers.data
+        }, status=201)
+    except IntegrityError:
+        return Response({
+            'error': 'Mã sinh viên đã tồn tại. Vui lòng sử dụng mã khác.'
+        }, status=400)     
+    except Exception as e:
+        return Response({
+            'error': str(e)
+        }, status=500)
+
+
+def create_student_page(request):
+    return render(request, 'create_student.html')
 
 # Giang Vien
 def teacher_detail(request, id):
@@ -81,6 +99,8 @@ def information(request):
         'giang_vien': teachers
     }
     return render(request, 'information.html', context)
+
+
 
 
 

@@ -21,7 +21,7 @@
         <form action="{% url 'home' %}" method="POST" class="p-8 space-y-6">
             
             <div>
-            {% csrf_token %}<input class="block text-sm font-semibold text-gray-700 mb-2" type="text" placeholder="Tên đăng nhập">
+            {% csrf_token %}<label class="block text-sm font-semibold text-gray-700 mb-2" for="username">Tên đăng nhập</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-user"></i>
@@ -33,7 +33,7 @@
             </div>
 
             <div>
-                <input class="block text-sm font-semibold text-gray-700 mb-2" type="password" placeholder="Mật khẩu">
+                <label class="block text-sm font-semibold text-gray-700 mb-2" for="password">Mật khẩu</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-lock"></i>
