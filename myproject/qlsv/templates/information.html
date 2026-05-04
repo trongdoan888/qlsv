@@ -60,7 +60,7 @@
                         <div>
                             <tbody class="divide-y divide-gray-100">
                                 {% for sv in sinh_vien %}
-                                <tr class="hover:bg-gray-50 transition">
+                                <tr class="hover:bg-gray-50 transition search-row">
                                     <td class="px-6 py-4 font-mono text-indigo-600">{{ sv.id }}</td>
                                     <td class="px-6 py-4 font-medium">{{ sv.name }}</td>
                                     <td class="px-6 py-4">{{ sv.lop }}</td>
@@ -98,7 +98,7 @@
                         <div>
                             {% for gv in giang_vien %}
                             <tbody class="divide-y divide-gray-100">
-                                <tr class="hover:bg-gray-50 transition">
+                                <tr class="hover:bg-gray-50 transition search-row">
                                     <td class="px-6 py-4 font-mono text-emerald-600">{{ gv.id }}</td>
                                     <td class="px-6 py-4 font-medium">{{ gv.name }}</td>
                                     <td class="px-6 py-4">{{ gv.major }}</td>
@@ -136,7 +136,27 @@
                 document.getElementById('section-giang-vien').classList.remove('hidden');
                 document.getElementById('btn-gv').classList.add('bg-indigo-700');
             }
+            document.getElementById('searchInput').value = ''; // Reset search input
+            document.querySelectorAll('.search-row').forEach(row => row.classList.remove('hidden')); // Hiện tất cả hàng
         }
+        // Tìm kiếm nhanh
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+
+            let value = this.value.toLowerCase();
+
+            let rows = document.querySelectorAll('.search-row');
+
+            rows.forEach(row => {
+
+                let text = row.innerText.toLowerCase();
+
+                if (text.indexOf(value) > -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            })
+        })
     </script>
 </body>
 </html>
