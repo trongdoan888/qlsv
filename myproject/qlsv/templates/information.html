@@ -60,13 +60,13 @@
                         <div>
                             <tbody class="divide-y divide-gray-100">
                                 {% for sv in sinh_vien %}
-                                <tr class="hover:bg-gray-50 transition search-row">
+                                <tr class="hover:bg-gray-50 transition search-row" data-id="{{ sv.id }}">
                                     <td class="px-6 py-4 font-mono text-indigo-600">{{ sv.id }}</td>
                                     <td class="px-6 py-4 font-medium">{{ sv.name }}</td>
                                     <td class="px-6 py-4">{{ sv.lop }}</td>
                                     <td class="px-6 py-4 text-right space-x-2">
-                                        <button class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
-                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
+                                        <button onclick="update_student('{{ sv.id }}')" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
+                                        <button onclick="delete_student('{{ sv.id }}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
                                     </td>
                                     <td class="px-6 py-4"><a href="{% url 'student_detail' sv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
                                 </tr>
@@ -103,10 +103,10 @@
                                     <td class="px-6 py-4 font-medium">{{ gv.name }}</td>
                                     <td class="px-6 py-4">{{ gv.major }}</td>
                                     <td class="px-6 py-4 text-right space-x-2">
-                                        <button class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
-                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
+                                        <button  class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
+                                        <button  class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
                                     </td>
-                                    <td class="px-6 py-4"><a href={% url 'teacher_detail' gv.id %} class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
+                                    <td class="px-6 py-4"><a href="{% url 'teacher_detail' gv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
                                 </tr>
                             </tbody>
                             {% endfor %}
@@ -157,6 +157,33 @@
                 }
             })
         })
+
+        // xóa sinh viên
+        function delete_student(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa sinh viên" + id + " này?")) {
+                fetch("/api/delete_student/" + id + "/", {
+                    method: "DELETE",
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Xóa hàng khỏi bảng
+                        document.querySelector(`[data-id="${id}"]`).remove();
+                        location.reload(); // Tải lại trang để cập nhật danh sách
+                    } else {
+                        alert("Có lỗi xảy ra khi xóa sinh viên.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Có lỗi xảy ra khi xóa sinh viên.");
+                });
+            }
+        }
+
+        function update_student(studentId) {
+        // Thường là chuyển hướng sang trang sửa
+        window.location.href = `/update-student-page/${studentId}/`;
+        }
     </script>
 </body>
 </html>
