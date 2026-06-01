@@ -88,7 +88,19 @@ def update_student(request, id):
     except sinhvien.DoesNotExist:
         return Response({'error': 'Sinh viên không tồn tại.'}, status=404)
     
+# Cập nhật thông tin sinh viên
+    student.name = request.data.get('name', student.name)
+    student.age = request.data.get('age', student.age)
+    student.email = request.data.get('email', student.email)
+    student.lop = request.data.get('lop', student.lop)
+    student.save()
 
+    serializer = SinhVienSerializer(student)
+
+    return Response({
+        'message': 'Thông tin sinh viên đã được cập nhật thành công.',
+        'student': serializer.data
+    }, status=200)
     
 
 
