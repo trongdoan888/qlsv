@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
     path('', views.home, name = 'home'),
     path('information', views.information, name = 'information'),
+
+    
     
     # API Lấy chi tiết thông tin giáo viên
     path('teacher-detail/<str:id>/', views.teacher_detail, name = 'teacher_detail'),
@@ -13,10 +15,6 @@ urlpatterns = [
     
     # API Lấy danh sách giáo viên
     path('api/teachers/', views.get_teachers, name='get_teachers'),
-
-    
-    
-
 
     # API Xóa sinh viên
     path('api/delete_student/<str:id>/', views.delete_student, name='delete_student_api'),
@@ -37,7 +35,7 @@ urlpatterns = [
     path('create-student/', views.create_student_page, name='create_student_page'),
 
     #Trang sửa thông tin sinh viên
-    path('update-student/<str:id>/', views.update_student_page, name='update_student_page'),
+    path('update_student_page/<str:id>/', views.update_student_page, name='update_student_page'),
 
     
 ]

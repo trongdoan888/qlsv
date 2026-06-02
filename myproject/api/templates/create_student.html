@@ -95,40 +95,54 @@
 
     <script>
     function sendData() {
-
+        
         const data = {
-            id : document.querySelector('input[name="id"]').value,
-            name : document.querySelector('input[name="name"]').value,
-            age : document.querySelector('input[name="age"]').value,
-            email : document.querySelector('input[name="email"]').value,
-            lop : document.querySelector('input[name="lop"]').value  
-        }
+            id: document.querySelector('input[name="id"]').value,
+            name: document.querySelector('input[name="name"]').value,
+            age: document.querySelector('input[name="age"]').value,
+            lop: document.querySelector('input[name="lop"]').value,
+            email: document.querySelector('input[name="email"]').value
+        };
 
-        console.log("Data to send:", data);
+        console.log("Dữ liệu gửi đi:", data);
 
         fetch('/api/create-student/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            if (result.ok) {
-                alert(result.message);
-                window.location.href = "{% url 'information' %}";
-            } else  {
-                alert("Thất bại: " + (result.error || "Đã xảy ra lỗi không xác định"));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("Khong thể kết nối đến server. Vui lòng thử lại sau!");
-        });
-    }
-    
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+            })
+            .then(response => {
+                const isHttpOk = response.ok;
+                // Gom đồng nhất: tầng này trả về biến tên là 'result'
+                return response.json().then(jsonData => ({ isHttpOk, result: jsonData }));
+            })
+            .then(({ isHttpOk, result }) => {
+                // Tầng này nhận đúng biến tên là 'result' đã gom ở trên
+                if (isHttpOk || result.message) {
+                    // Hiện thông báo thành công từ Backend trả về
+                    alert(result.message || "Thêm sinh viên thành công!");
+                    
+                    // Chuyển hướng về trang chính và ép trình duyệt tự động reset/reload lại trang đó
+                    window.location.href = "{% url 'information' %}";
+                    
+                    // Dòng này đảm bảo nếu trình duyệt bị dính cache trang cũ, nó sẽ ép reload lại
+                    if (window.location.pathname === "/information/") {
+                        window.location.reload();
+                    }
+                } else  {
+                    // Báo lỗi cụ thể từ Backend (ví dụ: trùng mã SV)
+                    alert("Thất bại: " + (result.error || "Đã xảy ra lỗi không xác định"));
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi thực thi JavaScript:', error);
+                alert("Không thể xử lý dữ liệu hoặc mất kết nối server!");
+            });
+        }
+        
     </script>
 </body>
 </html>

@@ -65,7 +65,7 @@
                                     <td class="px-6 py-4 font-medium">{{ sv.name }}</td>
                                     <td class="px-6 py-4">{{ sv.lop }}</td>
                                     <td class="px-6 py-4 text-right space-x-2">
-                                        <button onclick="update_student('{{ sv.id }}')" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
+                                        <a href="{% url 'update_student_page' sv.id %}" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</a>
                                         <button onclick="delete_student('{{ sv.id }}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
                                     </td>
                                     <td class="px-6 py-4"><a href="{% url 'student_detail' sv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
@@ -178,11 +178,6 @@
                     alert("Có lỗi xảy ra khi xóa sinh viên.");
                 });
             }
-        }
-
-        function update_student(studentId) {
-        // Thường là chuyển hướng sang trang sửa
-        window.location.href = `/update-student-page/${studentId}/`;
         }
     </script>
 </body>
