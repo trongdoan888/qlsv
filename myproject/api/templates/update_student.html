@@ -10,111 +10,138 @@
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
 
     <div class="max-w-2xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-        <div class="bg-amber-500 p-8 text-white text-center">
+        <div class="bg-indigo-600 p-8 text-white text-center">
             <div class="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
                 <i class="fas fa-user-edit text-3xl"></i>
             </div>
-            <h1 class="text-2xl font-bold uppercase tracking-wide">Chỉnh Sửa Thông Tin Sinh Viên</h1>
-            <p class="text-amber-100 text-sm mt-1">Thay đổi thông tin hồ sơ của sinh viên trong hệ thống</p>
+            <h1 class="text-2xl font-bold uppercase tracking-wide">Sửa Thông Tin Sinh Viên</h1>
+            <p class="text-indigo-100 text-sm mt-1">Mã sinh viên: <span class="font-mono font-bold text-yellow-300">{{ student.id }}</span></p>
         </div>
 
-        <form action="{% url 'update_student' sinh_vien.id %}" method="POST" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onsubmit="event.preventDefault(); updateData('{{ student.id }}');" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             {% csrf_token %}
 
             <div class="md:col-span-1">
-                <label class="block text-sm font-semibold text-gray-500 mb-2">Mã sinh viên (Không thể sửa)</label>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Mã sinh viên (Không thể sửa)</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-id-card"></i>
                     </span>
-                    <input type="text" value="{{ sinh_vien.id }}" disabled
-                           class="w-full pl-10 pr-4 py-2.5 bg-gray-100 border border-gray-200 text-gray-500 rounded-xl cursor-not-allowed outline-none font-mono font-bold">
-                    <input type="hidden" name="id" value="{{ sinh_vien.id }}">
+                    <input type="text" value="{{ student.id }}" disabled
+                           class="w-full pl-10 pr-4 py-2.5 bg-gray-100 border border-gray-300 rounded-xl text-gray-500 cursor-not-allowed outline-none">
                 </div>
             </div>
 
             <div class="md:col-span-1">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Lớp học</label>
-                <div class="relative">
-                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                        <i class="fas fa-university"></i>
-                    </span>
-                    <input type="text" name="lop" value="{{ sinh_vien.lop }}" required
-                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
-                           placeholder="Ví dụ: CNTT K15">
-                </div>
-            </div>
-
-            <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Họ và Tên</label>
+                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Họ và Tên</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-user"></i>
                     </span>
-                    <input type="text" name="name" value="{{ sinh_vien.name }}" required
-                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
-                           placeholder="Nguyễn Văn A">
+                    <input type="text" name="name" value="{{ student.name }}" required
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
                 </div>
             </div>
 
-            <div class="md:col-span-2 sm:md:col-span-1">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Tuổi</label>
+            <div class="md:col-span-1">
+                <label for="age" class="block text-sm font-semibold text-gray-700 mb-2">Tuổi</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-calendar-day"></i>
                     </span>
-                    <input type="number" name="age" value="{{ sinh_vien.age }}" required min="17" max="60"
-                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all">
+                    <input type="number" name="age" value="{{ student.age }}" required min="17" max="50"
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                </div>
+            </div>
+
+            <div class="md:col-span-1">
+                <label for="lop" class="block text-sm font-semibold text-gray-700 mb-2">Lớp học</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                        <i class="fas fa-university"></i>
+                    </span>
+                    <input type="text" name="lop" value="{{ student.lop }}" required
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
                 </div>
             </div>
 
             <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Địa chỉ Email</label>
+                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Địa chỉ Email</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-envelope"></i>
                     </span>
-                    <input type="email" name="email" value="{{ sinh_vien.email }}" required
-                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all"
-                           placeholder="sv@school.edu.vn">
+                    <input type="email" name="email" value="{{ student.email }}" required
+                           class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
                 </div>
             </div>
 
-            <div class="md:col-span-2 flex items-center justify-end space-x-4 mt-4 border-t pt-6">
-                <button type="button" onclick="history.back()" 
-                        class="px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-all">
+            <div class="md:col-span-2 flex items-center justify-end space-x-4 mt-4">
+                <a href="{% url 'information' %}" class="px-6 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-all">
                     Hủy bỏ
-                </button>
+                </a>
                 <button type="submit" 
-                        class="bg-amber-500 hover:bg-amber-600 text-white px-8 py-2.5 rounded-xl font-bold shadow-lg shadow-amber-200 transition-all transform active:scale-95">
-                    Lưu thay đổi
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-2.5 rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all transform active:scale-95">
+                    Cập nhật
                 </button>
             </div>
         </form>
     </div>
 
     <script>
-        // hàm hiển thị thông tin ban đầu của sinh viên khi trang được tải
-        document.addEventListener('DOMContentLoaded', function() {
-            const studentData = {{ student|safe }};
-            if (studentData) {
-                document.querySelector('input[name="name"]').value = studentData.name;
-                document.querySelector('input[name="age"]').value = studentData.age;
-                document.querySelector('input[name="lop"]').value = studentData.lop;
-                document.querySelector('input[name="email"]').value = studentData.email;
+    function updateData(studentId) {
+        // Lấy dữ liệu mới từ các ô input
+        const data = {
+            name : document.querySelector('input[name="name"]').value,
+            age : document.querySelector('input[name="age"]').value,
+            email : document.querySelector('input[name="email"]').value,
+            lop : document.querySelector('input[name="lop"]').value  
+        };
+
+        console.log("Dữ liệu cập nhật gửi đi:", data);
+
+        // Gọi đến API sửa đổi (PUT)
+        fetch(`/api/update_student/${studentId}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            const isHttpOk = response.ok;
+            return response.json().then(jsonData => ({ isHttpOk, result: jsonData }));
+        })
+        .then(({ isHttpOk, result }) => {
+            if (isHttpOk || result.message) {
+                // 1. Hiện thông báo thành công
+                alert(result.message || "Cập nhật thông tin thành công!");
+                
+                // 2. Kiểm tra xem có trang trước (referrer) không
+                if (document.referrer) {
+                    // Tạo một URL object từ trang trước đó
+                    const prevUrl = new URL(document.referrer);
+                    
+                    // Thêm một tham số ngẫu nhiên t (timestamp) vào URL trang trước 
+                    // Việc này ép trình duyệt PHẢI load lại dữ liệu mới từ Django, không được dùng cache cũ
+                    prevUrl.searchParams.set('t', Date.now());
+                    
+                    // Quay về trang trước kèm theo lệnh làm mới dữ liệu
+                    window.location.href = prevUrl.toString();
+                } else {
+                    // Phòng hờ nếu không tìm thấy trang trước thì tự quay về trang information mặc định
+                    window.location.href = "{% url 'information' %}";
+                }
+            } else {
+                alert("Thất bại: " + (result.error || "Đã xảy ra lỗi không xác định"));
             }
+        })
+        .catch(error => {
+            console.error('Lỗi JavaScript:', error);
+            alert("Không thể kết nối đến server để cập nhật dữ liệu!");
         });
-
-        // hàm xử lý sự kiện khi người dùng nhấn nút cập nhật (nếu cần thêm logic JS)
-
-        
-
-
-
-
-
+    }
     </script>
-
 </body>
 </html>
-
