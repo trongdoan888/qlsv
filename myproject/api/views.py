@@ -117,6 +117,20 @@ def teacher_detail(request, id):
 
     return render(request, 'teacher_detail.html', {'teacher': teacher})
 
+#Trang tạo giảng viên mới
+def create_teacher_page(request):
+    return render(request, 'create_teacher.html')
+
+# API để xóa giảng viên
+@api_view(['DELETE'])
+def delete_teacher(request, id):
+    try:
+        teacher = giangvien.objects.get(id=id)
+        teacher.delete()
+        return Response({'message': 'Giảng viên đã được xóa thành công.'}, status=200)
+    except giangvien.DoesNotExist:
+        return Response({'error': 'Giảng viên không tồn tại.'}, status=404)
+    
 # API để lấy danh sách giảng viên
 @api_view(['GET'])
 def get_teachers(request):
@@ -135,6 +149,31 @@ def create_teacher(request):
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
 
+# API để cập nhật thông tin giảng viên
+@api_view(['PUT'])
+def update_teacher(request, id):
+    try:
+        teacher = giangvien.objects.get(id=id)
+    except giangvien.DoesNotExist:
+        return Response({'error': 'Giảng viên không tồn tại.'}, status=404)
+    
+    teacher.name = request.data.get('name', teacher.name)
+    teacher.age = request.data.get('age', teacher.age)
+    teacher.email = request.data.get('email', teacher.email)
+    teacher.khoa = request.data.get('major', teacher.khoa)
+    teacher.save()
+
+    serializer = GiangVienSerializer(teacher)
+
+    return Response({
+        'message': 'Thông tin giảng viên đã được cập nhật thành công.',
+        'teacher': serializer.data
+    }, status=200)
+
+# Trang cập nhật thông tin giảng viên
+def update_teacher_page(request, id):
+    teacher = giangvien.objects.get(id=id)
+    return render(request, 'update_teacher.html', {'teacher': teacher})
 
 # Chung 
 def information(request):

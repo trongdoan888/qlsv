@@ -18,11 +18,11 @@
             <p class="text-emerald-100 text-sm mt-1">Cập nhật hồ sơ nhân sự vào hệ thống</p>
         </div>
 
-        <form action="{% url 'add_teacher' %}" method="POST" class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onsubmit="event.preventDefault(); send_Data();"  class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             {% csrf_token %}
 
             <div class="md:col-span-1">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Mã giảng viên (ID)</label>
+                <label for="id" class="block text-sm font-semibold text-gray-700 mb-2">Mã giảng viên (ID)</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-id-badge"></i>
@@ -34,7 +34,7 @@
             </div>
 
             <div class="md:col-span-1">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Họ và Tên</label>
+                <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Họ và Tên</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-user-tie"></i>
@@ -46,7 +46,7 @@
             </div>
 
             <div class="md:col-span-1">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Tuổi</label>
+                <label for="age" class="block text-sm font-semibold text-gray-700 mb-2">Tuổi</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-user-clock"></i>
@@ -58,7 +58,7 @@
             </div>
 
             <div class="md:col-span-1">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Khoa công tác</label>
+                <label for="khoa" class="block text-sm font-semibold text-gray-700 mb-2">Khoa công tác</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-building-columns"></i>
@@ -70,7 +70,7 @@
             </div>
 
             <div class="md:col-span-2">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Email công vụ</label>
+                <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email công vụ</label>
                 <div class="relative">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-envelope-open-text"></i>
@@ -92,6 +92,56 @@
             </div>
         </form>
     </div>
+
+    <script>
+        function send_Data() {
+            const data = {
+                id: document.querySelector('input[name="id"]').value,
+                name: document.querySelector('input[name="name"]').value,
+                age: document.querySelector('input[name="age"]').value,
+                khoa: document.querySelector('input[name="khoa"]').value,
+                email: document.querySelector('input[name="email"]').value
+            }
+
+            console.log("Dữ liệu gửi đi:", data);
+
+            fetch("{% url 'create_teacher_api' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify(data)
+            })
+
+            fetch('/api/create-teacher/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(data)
+            })
+            .then(response => {
+                const isHttpOk = response.ok;
+                return response.json().then(jsonData => ({ isHttpOk, result: jsonData }));
+            })
+            .then(({ isHttpOk, result }) => {
+                if (isHttpOk || result.message) {
+                    alert(result.message || "Thêm giảng viên thành công!");
+                    // Quay về trang chính và cập nhật lại dữ liệu
+                    window.location.href = "{% url 'information' %}";
+                } else  {
+                    alert("Thất bại: " + (result.error || "Mã giảng viên đã tồn tại hoặc dữ liệu sai"));
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi thực thi JavaScript:', error);
+                alert("Không thể xử lý dữ liệu hoặc mất kết nối server!");
+            });
+        }
+
+    </script>
 
 </body>
 </html>

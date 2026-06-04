@@ -83,8 +83,11 @@
             <section id="section-giang-vien" class="tab-content hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-bold text-gray-800">Danh sách Giảng viên</h1>
-                    <button class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg font-bold flex items-center">
-                        <i class="fas fa-plus mr-2"></i> Thêm Giảng viên
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-bold flex items-center">
+                        <a href="{% url 'create_teacher_page' %}" 
+                            class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-xl shadow-md transition-all transform active:scale-95 text-sm">
+                                <i class="fas fa-plus mr-2"></i> Thêm Giảng viên
+                        </a> 
                     </button>
                 </div> 
                 <div class="bg-white rounded-xl shadow overflow-hidden border border-gray-200">
@@ -106,8 +109,8 @@
                                     <td class="px-6 py-4 font-medium">{{ gv.name }}</td>
                                     <td class="px-6 py-4">{{ gv.major }}</td>
                                     <td class="px-6 py-4 text-right space-x-2">
-                                        <button  class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</button>
-                                        <button  class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
+                                        <a href="{% url 'update_teacher_page' gv.id %}" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</a>
+                                        <button onclick="delete_teacher('{{ gv.id }}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
                                     </td>
                                     <td class="px-6 py-4"><a href="{% url 'teacher_detail' gv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
                                 </tr>
@@ -161,6 +164,7 @@
             })
         })
 
+
         // xóa sinh viên
         function delete_student(id) {
             if (confirm("Bạn có chắc chắn muốn xóa sinh viên" + id + " này?")) {
@@ -179,6 +183,27 @@
                 .catch(error => {
                     console.error("Error:", error);
                     alert("Có lỗi xảy ra khi xóa sinh viên.");
+                });
+            }
+        }
+
+        function delete_teacher(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa giảng viên " + id + " này ?")) {
+                fetch("/api/delete_teacher/" + id + "/", {
+                    method: "DELETE",
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Xóa hàng khỏi bảng
+                        document.querySelector(`[data-id="${id}"]`).remove();
+                        location.reload(); // Tải lại trang để cập nhật danh sách
+                    } else {
+                        alert("Có lỗi xảy ra khi xóa giảng viên.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Có lỗi xảy ra khi xóa giảng viên.");
                 });
             }
         }

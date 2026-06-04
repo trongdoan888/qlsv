@@ -13,12 +13,19 @@ class sinhvien(models.Model):
     
 class giangvien(models.Model):
     name = models.CharField(max_length=100)
-    age = models.IntegerField()
     email = models.EmailField()
     id = models.CharField(max_length=20, primary_key=True)
     khoa = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
+    
+class account(models.Model):
+    username = models.CharField(max_length=50, unique=True)
+    password = models.CharField(max_length=128)  # Lưu mật khẩu đã được hash
+    role = models.CharField(max_length=20)  # 'teacher', 'student'
+
+    def __str__(self):
+        return self.username
     
 
