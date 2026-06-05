@@ -5,6 +5,8 @@ urlpatterns = [
     path('', views.home, name = 'home'),
     path('information', views.information, name = 'information'),
 
+    path('api/login/', views.login, name='login_api'),
+
     
     
     # API Lấy chi tiết thông tin giảng viên

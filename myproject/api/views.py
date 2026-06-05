@@ -1,12 +1,13 @@
 from urllib import request
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import  giangvien, sinhvien
+from .models import  giangvien, sinhvien, account
 from .serializers import SinhVienSerializer, GiangVienSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import IntegrityError 
 from rest_framework import status
+from django.contrib.auth import authenticate, login
 # Trang Login
 def home(request):
     if request.method == 'POST':
@@ -186,7 +187,30 @@ def information(request):
     }
     return render(request, 'information.html', context)
 
+# Kiểm tra tài khoản và mật khẩu (dùng cho trang login)
+@api_view(['POST'])
+def login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
 
+    if not username or not password:
+        return Response({'error': 'Vui lòng cung cấp tên đăng nhập và mật khẩu.'}, status=400)
+    
+    try:
+
+        user_account = account.objects.get(username=username)
+
+        if user_account.password == password:
+            
+            return Response({
+                'message': 'Đăng nhập thành công!',
+                'role': user_account.role
+            }, status=200)  
+        else:
+            return Response({'error': 'Mật khẩu không đúng.'}, status=401)
+    except account.DoesNotExist:
+        return Response({'error': 'Tài khoản không tồn tại.'}, status=404)
+            
 
 
 
