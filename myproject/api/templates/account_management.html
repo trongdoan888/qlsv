@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý tài khoản hệ thống</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-50 font-sans min-h-screen p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 tracking-tight">Quản Lý Tài Khoản</h1>
+                <p class="text-gray-500 text-sm">Phân quyền, cấp phát và giám sát tài khoản người dùng.</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-3 items-center">
+                <div class="flex items-center bg-white border border-gray-300 rounded-xl px-3 py-2 w-64 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 transition-all">
+                    <i class="fas fa-search text-gray-400"></i>
+                    <input type="text" placeholder="Tìm kiếm tài khoản..." class="bg-transparent border-none text-sm ml-2 w-full outline-none">
+                </div>
+                <a href="{% url 'create_account_page' %}" class="w-full sm:w-auto inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-100 transition-all transform active:scale-95 text-sm">
+                    <i class="fas fa-plus-circle mr-2"></i> Thêm tài khoản
+                </a>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                        <th class="px-6 py-4">Tên đăng nhập (Username)</th>
+                        <th class="px-6 py-4 text-center">Vai trò (Role)</th>
+                        <th class="px-6 py-4 text-center">ID Liên kết</th>
+                        <th class="px-6 py-4 text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                    
+                    {% for account in danh_sach_tai_khoan %}
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-gray-900">
+                            {{ account.username }}
+                        </td>
+                        
+                        <td class="px-6 py-4 text-center">
+                            {% if account.role == 'admin' %}
+                                <span class="bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full text-xs font-bold uppercase">Admin</span>
+                            {% elif account.role == 'teacher' %}
+                                <span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold uppercase">Giảng viên</span>
+                            {% else %}
+                                <span class="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-bold uppercase">Sinh viên</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td class="px-6 py-4 text-center font-mono font-bold text-gray-500">
+                            {% if account.associated_id %}
+                                #{{ account.associated_id }}
+                            {% else %}
+                                <span class="text-gray-300">Không có</span>
+                            {% endif %}
+                        </td>
+                        
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end space-x-2">
+                                {% if account.role == 'admin' %}
+                                    <button class="p-2 text-gray-300 cursor-not-allowed" title="Không thể sửa tài khoản Admin" disabled>
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="p-2 text-gray-300 cursor-not-allowed" title="Không thể xóa tài khoản Admin" disabled>
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                {% else %}
+                                    <a href="{% url 'edit_account' account.id %}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Sửa tài khoản">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'delete_account' account.id %}" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Xóa tài khoản">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-gray-900">superadmin</td>
+                        <td class="px-6 py-4 text-center"><span class="bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full text-xs font-bold uppercase">Admin</span></td>
+                        <td class="px-6 py-4 text-center font-mono font-bold text-gray-300">Không có</td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end space-x-2">
+                                <button class="p-2 text-gray-300 cursor-not-allowed" title="Không thể sửa tài khoản Admin" disabled><i class="fas fa-edit"></i></button>
+                                <button class="p-2 text-gray-300 cursor-not-allowed" title="Không thể xóa tài khoản Admin" disabled><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="hover:bg-slate-50/50 transition-colors">
+                        <td class="px-6 py-4 font-medium text-gray-900">maile_gv</td>
+                        <td class="px-6 py-4 text-center"><span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold uppercase">Giảng viên</span></td>
+                        <td class="px-6 py-4 text-center font-mono font-bold text-gray-500">#GV0023</td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex justify-end space-x-2">
+                                <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><i class="fas fa-edit"></i></button>
+                                <button class="p-2 text-red-500 hover:bg-red-50 rounded-lg"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -48,5 +48,13 @@ urlpatterns = [
     # Trang sửa thông tin giảng viên
     path('update_teacher_page/<str:id>/', views.update_teacher_page, name='update_teacher_page'),
     
+
+
+
+    # Trang thêm tài khoản cho sinh viên hoặc giảng viên
+    path('create-account/', views.create_account_page, name='create_account_page'),
+
+    # api thêm tài khoản cho sinh viên hoặc giảng viên
+    path('api/create-account/', views.create_account, name='create_account_api'),
     
 ]

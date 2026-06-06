@@ -24,6 +24,7 @@ class account(models.Model):
     username = models.CharField(max_length=50, unique=True)
     password = models.CharField(max_length=128)  # Lưu mật khẩu đã được hash
     role = models.CharField(max_length=20)  # 'teacher', 'student'
+    id = models.CharField(max_length=20, primary_key=True)  # Mã sinh viên hoặc giảng viên
 
     def __str__(self):
         return self.username
