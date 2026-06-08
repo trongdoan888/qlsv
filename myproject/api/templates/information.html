@@ -23,6 +23,9 @@
             <button onclick="switchTab('giang-vien')" id="btn-gv" class="w-full flex items-center p-3 hover:bg-indigo-800 rounded-xl transition">
                 <i class="fas fa-chalkboard-teacher mr-3"></i> Quản lý giảng viên
             </button>
+            <button onclick="switchTab('account')" id="btn-account" class="w-full flex items-center p-3 hover:bg-indigo-800 rounded-xl transition">
+                <i class="fas fa-users-cog mr-3"></i> Quản lý tài khoản
+            </button>
         </nav>
     </aside>
 
@@ -121,6 +124,75 @@
                 </div>
             </section>
 
+            <section id="section-account" class="tab-content hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">Quản lý Tài khoản</h1>
+                    <a href="{% url 'create_account_page' %}" class="w-full sm:w-auto inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-100 transition-all transform active:scale-95 text-sm">
+                        <i class="fas fa-plus-circle mr-2"></i> Thêm tài khoản
+                    </a>
+                </div>
+
+                <div>
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-6 py-4">Tên đăng nhập (Username)</th>
+                                <th class="px-6 py-4 text-center">Vai trò (Role)</th>
+                                <th class="px-6 py-4 text-center">ID Liên kết</th>
+                                <th class="px-6 py-4 text-right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                            
+                            {% for account in danh_sach_tai_khoan %}
+                            <tr class="hover:bg-slate-50/50 transition-colors">
+                                <td class="px-6 py-4 font-medium text-gray-900">
+                                    {{ account.username }}
+                                </td>
+                                
+                                <td class="px-6 py-4 text-center">
+                                    {% if account.role == 'admin' %}
+                                        <span class="bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full text-xs font-bold uppercase">Admin</span>
+                                    {% elif account.role == 'teacher' %}
+                                        <span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold uppercase">Giảng viên</span>
+                                    {% else %}
+                                        <span class="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-bold uppercase">Sinh viên</span>
+                                    {% endif %}
+                                </td>
+                                
+                                <td class="px-6 py-4 text-center font-mono font-bold text-gray-500">
+                                    {% if account.associated_id %}
+                                        #{{ account.associated_id }}
+                                    {% else %}
+                                        <span class="text-gray-300">Không có</span>
+                                    {% endif %}
+                                </td>
+                                
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex justify-end space-x-2">
+                                        {% if account.role == 'admin' %}
+                                            <button class="p-2 text-gray-300 cursor-not-allowed" title="Không thể sửa tài khoản Admin" disabled>
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="p-2 text-gray-300 cursor-not-allowed" title="Không thể xóa tài khoản Admin" disabled>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        {% else %}  
+                                            <a href="{% url 'update_account_page' account.id %}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Sửa tài khoản">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a  class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Xóa tài khoản">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>   
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -138,9 +210,12 @@
             if(tab === 'sinh-vien') {
                 document.getElementById('section-sinh-vien').classList.remove('hidden');
                 document.getElementById('btn-sv').classList.add('bg-indigo-700');
-            } else {
+            } else if(tab === 'giang-vien') {
                 document.getElementById('section-giang-vien').classList.remove('hidden');
                 document.getElementById('btn-gv').classList.add('bg-indigo-700');
+            } else if(tab === 'account') {
+                document.getElementById('section-account').classList.remove('hidden');
+                document.getElementById('btn-account').classList.add('bg-indigo-700');
             }
             document.getElementById('searchInput').value = ''; // Reset search input
             document.querySelectorAll('.search-row').forEach(row => row.classList.remove('hidden')); // Hiện tất cả hàng

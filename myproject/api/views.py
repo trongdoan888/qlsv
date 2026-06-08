@@ -159,7 +159,6 @@ def update_teacher(request, id):
         return Response({'error': 'Giảng viên không tồn tại.'}, status=404)
     
     teacher.name = request.data.get('name', teacher.name)
-    teacher.age = request.data.get('age', teacher.age)
     teacher.email = request.data.get('email', teacher.email)
     teacher.khoa = request.data.get('major', teacher.khoa)
     teacher.save()
@@ -183,7 +182,8 @@ def information(request):
 
     context = {
         'sinh_vien': students,
-        'giang_vien': teachers
+        'giang_vien': teachers,
+        'danh_sach_tai_khoan': account.objects.all()
     }
     return render(request, 'information.html', context)
 
@@ -250,6 +250,35 @@ def create_account(request):
 # Trang quản lý tài khoản (có thể dùng để hiển thị danh sách tài khoản và xóa tài khoản) - chưa hoàn thiện
 def manage_accounts(request):
     accounts = account.objects.all()
-    return render(request, 'manage_accounts.html', {'accounts': accounts})
+    return render(request, 'account_management.html', {'accounts': accounts})
 
+
+# APT sửa thông tin tài khoản 
+@api_view(['PUT'])
+def update_account(request, id):
+    try:
+        user_account = account.objects.get(id=id)
+    except account.DoesNotExist:
+        return Response({'error': 'Tài khoản không tồn tại.'}, status=404)
+    
+    user_account.id = request.data.get('id', user_account.id)
+    user_account.username = request.data.get('username', user_account.username)
+    user_account.password = request.data.get('password', user_account.password)
+    user_account.role = request.data.get('role', user_account.role)
+    user_account.save()
+
+    return Response({
+        'message': 'Thông tin tài khoản đã được cập nhật thành công.',
+        'account': {
+            'username': user_account.username,
+            'password': user_account.password,
+            'role': user_account.role,
+            'id': user_account.id
+        }
+    }, status=200)
+
+# Trang cập nhật thông tin tài khoản
+def update_account_page(request, id):
+    user_account = account.objects.get(id=id)
+    return render(request, 'update_account.html', {'account': user_account})
 
