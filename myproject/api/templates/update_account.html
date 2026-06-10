@@ -18,7 +18,7 @@
             <p class="text-amber-100 text-sm mt-1">Chỉnh sửa thông tin tài khoản hệ thống</p>
         </div>
 
-        <form id="accountForm" action="{% url 'update_account' account.id %}" method="POST" class="p-8 space-y-5">
+        <form onsubmit="event.preventDefault(); updateAccount('{{ account.id }}')" class="p-8 space-y-5">
             {% csrf_token %}
 
             <div>
@@ -27,7 +27,7 @@
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-fingerprint"></i>
                     </span>
-                    <input type="text" name="associated_id" id="field_id" value="{{ account.associated_id }}" required
+                    <input type="text" value="{{ account.id }}" disabled
                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all font-mono font-bold">
                 </div>
                 {% if error_id %}
@@ -41,7 +41,7 @@
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-user"></i>
                     </span>
-                    <input type="text" name="username" id="field_user" value="{{ account.username }}" required
+                    <input type="text" name="username" value="{{ account.username }}" required
                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all">
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                         <i class="fas fa-key"></i>
                     </span>
-                    <input type="password" name="password" id="field_pass" value="{{ account.password }}" required
+                    <input type="password" name="password" value="{{ account.password }}" required
                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all">
                 </div>
             </div>
@@ -87,48 +87,49 @@
     </div>
 
     <script>
-        // 1. Lưu lại toàn bộ giá trị ban đầu khi trang vừa load xong
-        const originalValues = {
-            id: document.getElementById('field_id').value,
-            user: document.getElementById('field_user').value,
-            pass: document.getElementById('field_pass').value,
-            role: document.getElementById('field_role').value
-        };
-
-        // Hàm thoát trực tiếp khi bấm nút Hủy
-        function exitDirectly() {
-            window.location.href = "/account-management"; // Điền URL trang quản lý của bạn vào đây
-        }
-
-        // 2. Hàm kiểm tra khi nhấn nút "Xác nhận"
-        function validateAndSubmit() {
-            // Lấy giá trị hiện tại ở các ô nhập liệu
-            const currentValues = {
-                id: document.getElementById('field_id').value,
-                user: document.getElementById('field_user').value,
-                pass: document.getElementById('field_pass').value,
-                role: document.getElementById('field_role').value
+        function updateAccount(accountId) {
+            const data = {
+                username: document.querySelector('input[name="username"]').value,
+                password: document.querySelector('input[name="password"]').value,
+                role: document.querySelector('select[name="role"]').value
             };
 
-            // So sánh xem có bất kỳ trường nào bị thay đổi hay không
-            const hasChanged = (
-                originalValues.id !== currentValues.id ||
-                originalValues.user !== currentValues.user ||
-                originalValues.pass !== currentValues.pass ||
-                originalValues.role !== currentValues.role
-            );
+            console.log("Dữ liệu gửi đi:", data); // Debug: Kiểm tra dữ liệu trước khi gửi
 
-            if (hasChanged) {
-                // Nếu CÓ thay đổi: Hiện thông báo xác nhận nhắc nhở người dùng
-                const confirmSave = confirm("Bạn đã thay đổi thông tin tài khoản. Bạn có chắc chắn muốn lưu các thay đổi này không?");
-                if (confirmSave) {
-                    document.getElementById('accountForm').submit(); // Người dùng đồng ý -> Submit form lên backend
+            fetch(`/api/accounts/${accountId}/update/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data)
+            })
+            
+            .then(({ isHttpOk, result }) => {
+                if (isHttpOk || result.message) {
+                    alert( result.message || "Cập nhật tài khoản thành công!");
+
+                    if (document.referrer) {
+                        
+                        const prevUrl = new URL(document.referrer);
+
+                        prevUrl.searchParams.set('updated_account_id', Date.now()); // Thêm tham số để buộc reload
+                        window.location.href = prevUrl.toString();
+                    } else {
+                    window.location.href = "{% url 'account_management' %}"; // Quay về trang quản lý tài khoản
+                } else {
+                    console.error("Lỗi từ backend:", result.error);
+                    alert("Có lỗi xảy ra: " + result.error);
                 }
-            } else {
-                // Nếu KHÔNG có thay đổi: Trực tiếp thoát quay về trang quản lý tài khoản
-                exitDirectly();
-            }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Có lỗi xảy ra khi gửi yêu cầu.");
+            });
         }
+
+
+        
     </script>
 </body>
 </html>
