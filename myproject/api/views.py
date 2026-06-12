@@ -210,7 +210,40 @@ def login(request):
             return Response({'error': 'Mật khẩu không đúng.'}, status=401)
     except account.DoesNotExist:
         return Response({'error': 'Tài khoản không tồn tại.'}, status=404)
-          
+    
+
+# API thêm tài khoản mới cho sinh viên hoặc giảng viên
+@api_view(['POST'])
+def create_account(request):
+    try:
+        new_account = account.objects.create(
+            username = request.data.get('username'),
+            password = request.data.get('password'),
+            role = request.data.get('role'),
+            id = request.data.get('id')
+        )
+
+        
+
+        user_account = account.objects.get(id=new_account.id)
+
+        return Response({
+            'message': 'Tài khoản được tạo thành công!',
+            'account': {
+                'username': new_account.username,
+                'role': new_account.role,
+                'id': new_account.id
+            },
+            'id_check': user_account.id
+        }, status=201)
+    except IntegrityError:
+        return Response({
+            'error': 'Tên đăng nhập đã tồn tại. Vui lòng sử dụng tên khác.'
+        }, status=400)     
+    except Exception as e:
+        return Response({
+            'error': str(e)
+        }, status=500)          
 
 # Trang thêm tài khoản cho sinh viên hoặc giảng viên
 def create_account_page(request):

@@ -78,7 +78,7 @@
                 <button type="button" onclick="exitDirectly()" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:bg-gray-100 transition-all">
                     Hủy
                 </button>
-                <button type="button" onclick="validateAndSubmit()"
+                <button type="button" onclick="updateAccount({{ account.id }})"
                         class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-amber-150 transition-all transform active:scale-95">
                     Xác nhận
                 </button>
@@ -96,17 +96,22 @@
 
             console.log("Dữ liệu gửi đi:", data); // Debug: Kiểm tra dữ liệu trước khi gửi
 
-            fetch(`/api/accounts/${accountId}/update/`, {
-                method: 'POST',
+            fetch(`/api/update-account/${accountId}/`, {
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': '{{ csrf_token }}'
                 },
                 body: JSON.stringify(data)
             })
+            .then(response => {
+            const isHttpOk = response.ok;
+            return response.json().then(jsonData => ({ isHttpOk, result: jsonData }));
+            })
             
             .then(({ isHttpOk, result }) => {
                 if (isHttpOk || result.message) {
+
                     alert( result.message || "Cập nhật tài khoản thành công!");
 
                     if (document.referrer) {
@@ -114,22 +119,23 @@
                         const prevUrl = new URL(document.referrer);
 
                         prevUrl.searchParams.set('updated_account_id', Date.now()); // Thêm tham số để buộc reload
+                        
                         window.location.href = prevUrl.toString();
                     } else {
-                    window.location.href = "{% url 'account_management' %}"; // Quay về trang quản lý tài khoản
+
+                        window.location.href = "{% url 'information' %}"; // Quay về trang quản lý tài khoản
+
+                    }
                 } else {
                     console.error("Lỗi từ backend:", result.error);
                     alert("Có lỗi xảy ra: " + result.error);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error("Lỗi khi gửi yêu cầu:", error);
                 alert("Có lỗi xảy ra khi gửi yêu cầu.");
             });
         }
-
-
-        
     </script>
 </body>
 </html>
