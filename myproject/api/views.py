@@ -243,7 +243,10 @@ def create_account(request):
     except Exception as e:
         return Response({
             'error': str(e)
-        }, status=500)          
+        }, status=500)      
+
+
+# Quản lý tài khoản 
 
 # Trang thêm tài khoản cho sinh viên hoặc giảng viên
 def create_account_page(request):
@@ -314,4 +317,16 @@ def update_account(request, id):
 def update_account_page(request, id):
     user_account = account.objects.get(id=id)
     return render(request, 'update_account.html', {'account': user_account})
+
+# API xóa tài khoản
+@api_view(['DELETE'])
+def delete_account(request, id):
+    try:
+        user_account = account.objects.get(id=id)
+        user_account.delete()
+        return Response({'message': 'Tài khoản đã được xóa thành công.'}, status=200)
+    except account.DoesNotExist:
+        return Response({'error': 'Tài khoản không tồn tại.'}, status=404)
+
+
 

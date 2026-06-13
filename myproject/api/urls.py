@@ -8,6 +8,8 @@ urlpatterns = [
     path('api/login/', views.login, name='login_api'),
 
     
+    # Trang sửa thông tin giảng viên
+    path('update_teacher_page/<str:id>/', views.update_teacher_page, name='update_teacher_page'),
     
     # API Lấy chi tiết thông tin giảng viên
     path('teacher-detail/<str:id>/', views.teacher_detail, name = 'teacher_detail'),
@@ -20,6 +22,11 @@ urlpatterns = [
 
     # API Xóa giảng viên
     path('api/delete_teacher/<str:id>/', views.delete_teacher, name='delete_teacher_api'),
+
+    # Trang tạo giảng viên mới
+    path('create-teacher/', views.create_teacher_page, name='create_teacher_page'),
+
+
 
     # API Xóa sinh viên
     path('api/delete_student/<str:id>/', views.delete_student, name='delete_student_api'),
@@ -42,11 +49,7 @@ urlpatterns = [
     #Trang sửa thông tin sinh viên
     path('update_student_page/<str:id>/', views.update_student_page, name='update_student_page'),
 
-    # Trang tạo giảng viên mới
-    path('create-teacher/', views.create_teacher_page, name='create_teacher_page'),
-
-    # Trang sửa thông tin giảng viên
-    path('update_teacher_page/<str:id>/', views.update_teacher_page, name='update_teacher_page'),
+   
     
 
 
@@ -57,11 +60,13 @@ urlpatterns = [
     # api thêm tài khoản cho sinh viên hoặc giảng viên
     path('api/create-account/', views.create_account, name='create_account_api'),
 
-
     # API cập nhật thông tin tài khoản
     path('api/update-account/<str:id>/', views.update_account, name='update_account_api'),
     
     # Trang cập nhật thông tin tài khoản
     path('update-account/<str:id>/', views.update_account_page, name='update_account_page'),
+
+    # API Xóa tài khoản
+    path('api/delete-account/<str:id>/', views.delete_account, name='delete_account_api'),
     
 ]

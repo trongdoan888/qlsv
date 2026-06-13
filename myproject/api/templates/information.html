@@ -6,9 +6,6 @@
     <title>Hệ thống Quản lý Giáo dục</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .active-tab { bg-color: #4f46e5; border-radius: 0.75rem; }
-    </style>
 </head>
 <body class="bg-gray-100 font-sans flex min-h-screen">
 
@@ -30,7 +27,6 @@
     </aside>
 
     <div class="flex-1 flex flex-col">
-        
         <header class="bg-white shadow-sm border-b border-gray-200 px-8 py-4 flex justify-between items-center">
             <div class="flex items-center bg-gray-100 rounded-lg px-4 py-2 w-1/3">
                 <i class="fas fa-search text-gray-400"></i>
@@ -41,16 +37,13 @@
         </header>
 
         <main class="p-8">
-            
             <section id="section-sinh-vien" class="tab-content">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-bold text-gray-800">Danh sách Sinh viên</h1>
-                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-bold flex items-center">
-                        <a href="{% url 'create_student_page' %}" 
-                            class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-xl shadow-md transition-all transform active:scale-95 text-sm">
-                                <i class="fas fa-plus mr-2"></i> Thêm Sinh viên
-                        </a> 
-                    </button>
+                    <a href="{% url 'create_student_page' %}" 
+                       class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-xl shadow-md transition-all transform active:scale-95 text-sm">
+                        <i class="fas fa-plus mr-2"></i> Thêm Sinh viên
+                    </a> 
                 </div>
                 <div class="bg-white rounded-xl shadow overflow-hidden border border-gray-200">
                     <table class="w-full text-left">
@@ -63,22 +56,20 @@
                                 <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Xem thông tin</th>
                             </tr>
                         </thead>
-                        <div>
-                            <tbody class="divide-y divide-gray-100">
-                                {% for sv in sinh_vien %}
-                                <tr class="hover:bg-gray-50 transition search-row" data-id="{{ sv.id }}">
-                                    <td class="px-6 py-4 font-mono text-indigo-600">{{ sv.id }}</td>
-                                    <td class="px-6 py-4 font-medium">{{ sv.name }}</td>
-                                    <td class="px-6 py-4">{{ sv.lop }}</td>
-                                    <td class="px-6 py-4 text-right space-x-2">
-                                        <a href="{% url 'update_student_page' sv.id %}" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</a>
-                                        <button onclick="delete_student('{{ sv.id }}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
-                                    </td>
-                                    <td class="px-6 py-4"><a href="{% url 'student_detail' sv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </div>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for sv in sinh_vien %}
+                            <tr class="hover:bg-gray-50 transition search-row" data-id="{{ sv.id }}">
+                                <td class="px-6 py-4 font-mono text-indigo-600">{{ sv.id }}</td>
+                                <td class="px-6 py-4 font-medium">{{ sv.name }}</td>
+                                <td class="px-6 py-4">{{ sv.lop }}</td>
+                                <td class="px-6 py-4 text-right space-x-2">
+                                    <a href="{% url 'update_student_page' sv.id %}" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</a>
+                                    <button onclick="delete_student('{{ sv.id }}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
+                                </td>
+                                <td class="px-6 py-4"><a href="{% url 'student_detail' sv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </section>
@@ -86,12 +77,10 @@
             <section id="section-giang-vien" class="tab-content hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-bold text-gray-800">Danh sách Giảng viên</h1>
-                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg font-bold flex items-center">
-                        <a href="{% url 'create_teacher_page' %}" 
-                            class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-xl shadow-md transition-all transform active:scale-95 text-sm">
-                                <i class="fas fa-plus mr-2"></i> Thêm Giảng viên
-                        </a> 
-                    </button>
+                    <a href="{% url 'create_teacher_page' %}" 
+                       class="inline-flex items-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-xl shadow-md transition-all transform active:scale-95 text-sm">
+                        <i class="fas fa-plus mr-2"></i> Thêm Giảng viên
+                    </a> 
                 </div> 
                 <div class="bg-white rounded-xl shadow overflow-hidden border border-gray-200">
                     <table class="w-full text-left">
@@ -104,22 +93,20 @@
                                 <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">Xem thông tin</th>
                             </tr>
                         </thead>
-                        <div>
+                        <tbody class="divide-y divide-gray-100">
                             {% for gv in giang_vien %}
-                            <tbody class="divide-y divide-gray-100">
-                                <tr class="hover:bg-gray-50 transition search-row">
-                                    <td class="px-6 py-4 font-mono text-emerald-600">{{ gv.id }}</td>
-                                    <td class="px-6 py-4 font-medium">{{ gv.name }}</td>
-                                    <td class="px-6 py-4">{{ gv.major }}</td>
-                                    <td class="px-6 py-4 text-right space-x-2">
-                                        <a href="{% url 'update_teacher_page' gv.id %}" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</a>
-                                        <button onclick="delete_teacher('{{ gv.id }}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
-                                    </td>
-                                    <td class="px-6 py-4"><a href="{% url 'teacher_detail' gv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
-                                </tr>
-                            </tbody>
+                            <tr class="hover:bg-gray-50 transition search-row" data-id="{{ gv.id }}">
+                                <td class="px-6 py-4 font-mono text-emerald-600">{{ gv.id }}</td>
+                                <td class="px-6 py-4 font-medium">{{ gv.name }}</td>
+                                <td class="px-6 py-4">{{ gv.major }}</td>
+                                <td class="px-6 py-4 text-right space-x-2">
+                                    <a href="{% url 'update_teacher_page' gv.id %}" class="text-blue-600 hover:text-blue-800"><i class="fas fa-edit"></i> Sửa</a>
+                                    <button onclick="delete_teacher('{{ gv.id }}')" class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i> Xóa</button>
+                                </td>
+                                <td class="px-6 py-4"><a href="{% url 'teacher_detail' gv.id %}" class="text-blue-600 hover:text-blue-800"> Xem chi tiết </a></td>
+                            </tr>
                             {% endfor %}
-                        </div>
+                        </tbody>
                     </table>
                 </div>
             </section>
@@ -127,12 +114,12 @@
             <section id="section-account" class="tab-content hidden">
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-bold text-gray-800">Quản lý Tài khoản</h1>
-                    <a href="{% url 'create_account_page' %}" class="w-full sm:w-auto inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-100 transition-all transform active:scale-95 text-sm">
+                    <a href="{% url 'create_account_page' %}" class="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-lg shadow-indigo-100 transition-all transform active:scale-95 text-sm">
                         <i class="fas fa-plus-circle mr-2"></i> Thêm tài khoản
                     </a>
                 </div>
 
-                <div>
+                <div class="bg-white rounded-xl shadow overflow-hidden border border-gray-200">
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
                             <tr>
@@ -143,9 +130,8 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
-                            
                             {% for account in danh_sach_tai_khoan %}
-                            <tr class="hover:bg-slate-50/50 transition-colors">
+                            <tr class="hover:bg-slate-50/50 transition-colors search-row" data-id="{{ account.id }}">
                                 <td class="px-6 py-4 font-medium text-gray-900">
                                     {{ account.username }}
                                 </td>
@@ -181,9 +167,9 @@
                                             <a href="{% url 'update_account_page' account.id %}" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Sửa tài khoản">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a  class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Xóa tài khoản">
+                                            <button onclick="delete_account('{{ account.id }}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Xóa tài khoản">
                                                 <i class="fas fa-trash-alt"></i>
-                                            </a>
+                                            </button>
                                         {% endif %}
                                     </div>
                                 </td>   
@@ -205,6 +191,7 @@
             // Bỏ màu active của tất cả nút
             document.getElementById('btn-sv').classList.remove('bg-indigo-700');
             document.getElementById('btn-gv').classList.remove('bg-indigo-700');
+            document.getElementById('btn-account').classList.remove('bg-indigo-700');
 
             // Hiện section tương ứng và active nút
             if(tab === 'sinh-vien') {
@@ -218,39 +205,36 @@
                 document.getElementById('btn-account').classList.add('bg-indigo-700');
             }
             document.getElementById('searchInput').value = ''; // Reset search input
-            document.querySelectorAll('.search-row').forEach(row => row.classList.remove('hidden')); // Hiện tất cả hàng
+            // Hiện lại tất cả các dòng tìm kiếm ẩn trước đó
+            document.querySelectorAll('.search-row').forEach(row => row.style.display = ''); 
         }
-        // Tìm kiếm nhanh
+
+        // Tìm kiếm nhanh (Đã sửa lỗi ẩn hiện bằng display)
         document.getElementById('searchInput').addEventListener('keyup', function() {
-
             let value = this.value.toLowerCase();
-
             let rows = document.querySelectorAll('.search-row');
 
             rows.forEach(row => {
-
                 let text = row.innerText.toLowerCase();
-
                 if (text.indexOf(value) > -1) {
                     row.style.display = '';
                 } else {
                     row.style.display = 'none';
                 }
-            })
-        })
+            });
+        });
 
-
-        // xóa sinh viên
+        // Xóa sinh viên
         function delete_student(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa sinh viên" + id + " này?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa sinh viên " + id + " này?")) {
                 fetch("/api/delete_student/" + id + "/", {
                     method: "DELETE",
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }
                 })
                 .then(response => {
                     if (response.ok) {
-                        // Xóa hàng khỏi bảng
-                        document.querySelector(`[data-id="${id}"]`).remove();
-                        location.reload(); // Tải lại trang để cập nhật danh sách
+                        alert("Xóa sinh viên thành công!");
+                        location.reload();
                     } else {
                         alert("Có lỗi xảy ra khi xóa sinh viên.");
                     }
@@ -262,16 +246,17 @@
             }
         }
 
+        // Xóa giảng viên
         function delete_teacher(id) {
-            if (confirm("Bạn có chắc chắn muốn xóa giảng viên " + id + " này ?")) {
+            if (confirm("Bạn có chắc chắn muốn xóa giảng viên " + id + " này?")) {
                 fetch("/api/delete_teacher/" + id + "/", {
                     method: "DELETE",
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }
                 })
                 .then(response => {
                     if (response.ok) {
-                        // Xóa hàng khỏi bảng
-                        document.querySelector(`[data-id="${id}"]`).remove();
-                        location.reload(); // Tải lại trang để cập nhật danh sách
+                        alert("Xóa giảng viên thành công!");
+                        location.reload();
                     } else {
                         alert("Có lỗi xảy ra khi xóa giảng viên.");
                     }
@@ -279,6 +264,29 @@
                 .catch(error => {
                     console.error("Error:", error);
                     alert("Có lỗi xảy ra khi xóa giảng viên.");
+                });
+            }
+        }
+
+        // Xóa tài khoản (ĐÃ SỬA ĐỒNG BỘ ĐƯỜNG DẪN API)
+        // Hãy chắc chắn đường dẫn này giống cấu trúc delete trong urls.py của bạn nhé
+        function delete_account(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa tài khoản mã " + id + " này không?")) {
+                fetch("/api/delete-account/" + id + "/", {
+                    method: "DELETE",
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Đã xóa tài khoản thành công!");
+                        location.reload(); // Tải lại trang để cập nhật danh sách
+                    } else {
+                        alert("Có lỗi xảy ra từ máy chủ khi xóa tài khoản.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Mất kết nối server, không thể xóa tài khoản.");
                 });
             }
         }
