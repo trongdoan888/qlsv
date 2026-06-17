@@ -15,7 +15,7 @@ urlpatterns = [
     path('teacher-detail/<str:id>/', views.teacher_detail, name = 'teacher_detail'),
 
     # API Tạo giảng viên mới
-    path('api/create-teacher/', views.create_teacher, name='create_teacher_api'),
+    path('api/create-teacher/', views.create_teacher_api, name='create_teacher_api'),
     
     # API Lấy danh sách giảng viên
     path('api/teachers/', views.get_teachers, name='get_teachers'),

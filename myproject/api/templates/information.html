@@ -290,6 +290,15 @@
                 });
             }
         }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            // Nếu thấy có tín hiệu vừa cập nhật tài khoản từ trang update_account quay về
+            if (urlParams.has('updated_account_id')) {
+                // Tự động kích hoạt chuyển sang tab Quản lý tài khoản để Admin nhìn thấy ngay thay đổi
+                switchTab('account'); 
+            }
+        });
     </script>
 </body>
 </html>

@@ -7,6 +7,7 @@ class sinhvien(models.Model):
     email = models.EmailField()
     id = models.CharField(max_length=20, primary_key=True)
     lop = models.CharField(max_length=100)
+    role = models.CharField(max_length=20, default='student')
 
     def __str__(self):
         return self.name
@@ -16,7 +17,7 @@ class giangvien(models.Model):
     email = models.EmailField()
     id = models.CharField(max_length=20, primary_key=True)
     khoa = models.CharField(max_length=100)
-
+    role = models.CharField(max_length=20, default='teacher')
     def __str__(self):
         return self.name
     
