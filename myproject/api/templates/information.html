@@ -123,17 +123,23 @@
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
                             <tr>
-                                <th class="px-6 py-4">Tên đăng nhập (Username)</th>
-                                <th class="px-6 py-4 text-center">Vai trò (Role)</th>
-                                <th class="px-6 py-4 text-center">ID Liên kết</th>
-                                <th class="px-6 py-4 text-right">Thao tác</th>
+                                <th class="px-6 py-4 w-1/4">Tên đăng nhập (Username)</th>
+                                <th class="px-6 py-4 w-1/4">Mật khẩu (Password)</th>
+                                <th class="px-6 py-4 text-center w-1/6">Vai trò (Role)</th>
+                                <th class="px-6 py-4 text-center w-1/6">ID Liên kết</th>
+                                <th class="px-6 py-4 text-right w-1/6">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
                             {% for account in danh_sach_tai_khoan %}
                             <tr class="hover:bg-slate-50/50 transition-colors search-row" data-id="{{ account.id }}">
+                                
                                 <td class="px-6 py-4 font-medium text-gray-900">
                                     {{ account.username }}
+                                </td>
+                                
+                                <td class="px-6 py-4 font-mono font-bold text-emerald-600">
+                                    {{ account.password }}
                                 </td>
                                 
                                 <td class="px-6 py-4 text-center">

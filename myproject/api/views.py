@@ -8,6 +8,10 @@ from rest_framework.response import Response
 from django.db import IntegrityError 
 from rest_framework import status
 from django.contrib.auth import authenticate, login
+import random 
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
+
 # Trang Login
 def home(request):
     if request.method == 'POST':
@@ -315,68 +319,38 @@ def delete_account(request, id):
     except account.DoesNotExist:
         return Response({'error': 'Tài khoản không tồn tại.'}, status=404)
 
-#API di chuyển sinh viên và giảng viên sau khi cập nhật role
+# Nâng cấp thêm
 
-@api_view(['POST', 'PUT'])
-@api_view(['POST', 'PUT'])
-def move_user(request, id):
-    try:
-        user_account = account.objects.get(id=id)
-    except account.DoesNotExist:
-        return Response({'error': 'Tài khoản không tồn tại trên hệ thống.'}, status=404)
-    
-    new_role = request.data.get('role')  # Gồm 'student' hoặc 'teacher'
+@receiver(post_save, sender=sinhvien)
+def create_account_for_student(sender, instance, created, **kwargs):
+    if created:
 
-    # =========================================================================
-    # TRƯỜNG HỢP 1: CHUYỂN THẲNG THÀNH SINH VIÊN ('student')
-    # =========================================================================
-    if new_role == 'student':
-        # Kiểm tra xem mã ID này ĐÃ BỊ TRÙNG (tồn tại sẵn) bên bảng sinhvien chưa
-        if sinhvien.objects.filter(id=id).exists():
-            return Response({'error': f'Mã ID {id} đã tồn tại sẵn trong danh sách Sinh viên! Không thể trùng lặp.'}, status=400)
+        random_password = str(random.randint(100000, 999999))
         
-        # Nếu chưa trùng, tạo thẳng bản ghi mới bên bảng sinhvien không cần hỏi han bảng cũ
-        sinhvien.objects.create(
-            id=id,
-            name=user_account.username,  # Lấy tạm tên username làm họ tên gốc
-            age=20,                      # Tuổi mặc định
-            email=f"{user_account.username}@gmail.com", # Email tạm thời
-            lop='Chưa xếp lớp'
+        account.objects.create(
+            id=instance.id,
+            username=instance.id,
+            password=random_password,
+            role='student'
         )
-        
-        # Tiện tay xóa ngầm bên bảng giảng viên (nếu có tồn tại vết tích cũ) để làm sạch DB
-        giangvien.objects.filter(id=id).delete()
 
-    # =========================================================================
-    # TRƯỜNG HỢP 2: CHUYỂN THẲNG THÀNH GIẢNG VIÊN ('teacher')
-    # =========================================================================
-    elif new_role == 'teacher':
-        # Kiểm tra xem mã ID này ĐÃ BỊ TRÙNG (tồn tại sẵn) bên bảng giangvien chưa
-        if giangvien.objects.filter(id=id).exists():
-            return Response({'error': f'Mã ID {id} đã tồn tại sẵn trong danh sách Giảng viên! Không thể trùng lặp.'}, status=400)
-        
-        # Nếu chưa trùng, tạo thẳng bản ghi mới bên bảng giangvien (trường 'major' thay cho 'khoa')
-        giangvien.objects.create(
-            id=id,
-            name=user_account.username,
-            email=f"{user_account.username}@gmail.com",
-            major='Công nghệ thông tin'
+@receiver(post_save, sender=giangvien)
+def create_account_for_teacher(sender, instance, created, **kwargs):
+    if created:
+        random_password = str(random.randint(100000, 999999))
+        account.objects.create(
+            id=instance.id,
+            username=instance.id,
+            password=random_password,
+            role='teacher'
         )
-        
-        # Tiện tay xóa ngầm bên bảng sinh viên (nếu có tồn tại vết tích cũ)
-        sinhvien.objects.filter(id=id).delete()
 
-    # =========================================================================
-    # BƯỚC CUỐI: Cập nhật lại role mới vào bảng account hệ thống
-    # =========================================================================
-    user_account.role = new_role
-    user_account.save()
+@receiver(post_delete, sender=sinhvien)
+def delete_account_for_student(sender, instance, **kwargs):
 
-    return Response({
-        'message': 'Tài khoản đã được chuyển vùng trực tiếp thành công!',
-        'account': {
-            'username': user_account.username,
-            'role': user_account.role,
-            'id': user_account.id
-        }
-    }, status=200)
+    account.objects.filter(id=instance.id).delete()
+
+@receiver(post_delete, sender=giangvien)
+def delete_account_for_teacher(sender, instance, **kwargs):
+
+    account.objects.filter(id=instance.id).delete()
