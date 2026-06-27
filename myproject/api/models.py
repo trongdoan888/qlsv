@@ -1,5 +1,8 @@
 from django.db import models
 
+class LopHoc(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
 # Create your models here.
 class sinhvien(models.Model):
     name = models.CharField(max_length=100)
@@ -8,6 +11,8 @@ class sinhvien(models.Model):
     id = models.CharField(max_length=20, primary_key=True)
     lop = models.CharField(max_length=100)
     role = models.CharField(max_length=20, default='student')
+
+    # class_rooms = models.ManyToManyField(LopHoc, related_name="students")
 
     def __str__(self):
         return self.name

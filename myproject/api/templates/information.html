@@ -232,10 +232,18 @@
 
         // Xóa sinh viên
         function delete_student(id) {
+            username = localStorage.getItem("username");
+            password = localStorage.getItem("password");
+
+            const credentials = btoa(username + ":" + password);
+
             if (confirm("Bạn có chắc chắn muốn xóa sinh viên " + id + " này?")) {
                 fetch("/api/delete_student/" + id + "/", {
                     method: "DELETE",
-                    headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+                    headers: { 
+                        "Authorization": "Basic " + credentials, 
+                        'X-CSRFToken': '{{ csrf_token }}' 
+                    }
                 })
                 .then(response => {
                     if (response.ok) {

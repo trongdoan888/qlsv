@@ -101,6 +101,8 @@
 
                 if (isHttpOk) {
                     if (result.role === "admin") {
+                        localStorage.setItem('username', username); 
+                        localStorage.setItem('password', password); 
                         window.location.href = "{% url 'information' %}";
                     } else {
                         alert("Bạn không có quyền truy cập vào trang quản lý.");
